@@ -9,7 +9,6 @@ import SwiftUI
 import FinixTapToPaySDK
 
 @main
-@available(iOS 16.4, *)
 struct FinixTapToPaySDKDemoApp: App {
     var body: some Scene {
         WindowGroup {
@@ -34,7 +33,7 @@ struct UnsupportedDeviceView: View {
                 .font(.title2)
                 .fontWeight(.semibold)
 
-            Text("Tap to Pay on iPhone requires an iPhone XS or later with iOS 16.4 or later.")
+            Text("Tap to Pay on iPhone requires an iPhone XS or later with iOS 18.1 or later.")
                 .font(.body)
                 .foregroundColor(.secondary)
                 .multilineTextAlignment(.center)

@@ -11,7 +11,11 @@ permissions:
   pull-requests: read
 jobs:
   pr-commits:
-    name: Validate Pull Request Commit Messages
+    # Branch rules require a check named exactly "pr-commits / Validate PR Commit Messages"
+    # (the name the org-shared reusable workflow reports as). That workflow runs on
+    # self-hosted runners, which a public repo must not use, so this GitHub-hosted job
+    # reports under the required name instead.
+    name: pr-commits / Validate PR Commit Messages
     runs-on: ubuntu-latest
     steps:
       - name: Validate PR Commits
