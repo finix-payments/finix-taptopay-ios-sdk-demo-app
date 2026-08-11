@@ -12,7 +12,7 @@ struct ConfigurationView: View {
     @ObservedObject var viewModel: ContentViewModel
     @SwiftUI.Environment(\.dismiss) private var dismiss
 
-    @State private var selectedEnvironment: TapToPayEnvironment = .qa
+    @State private var selectedEnvironment: TapToPayEnvironment = .sandbox
     @State private var deviceId: String = ""
     @State private var merchantId: String = ""
     @State private var merchantMid: String = ""
@@ -29,13 +29,12 @@ struct ConfigurationView: View {
                 Picker("Environment", selection: $selectedEnvironment) {
                     Text("Production").tag(TapToPayEnvironment.production)
                     Text("Sandbox").tag(TapToPayEnvironment.sandbox)
-                    Text("QA").tag(TapToPayEnvironment.qa)
                 }
                 .pickerStyle(SegmentedPickerStyle())
                 .listRowInsets(EdgeInsets())
                 .listRowBackground(Color(UIColor.systemGroupedBackground))
-                .onChange(of: selectedEnvironment) { newEnvironment in
-                    loadDefaultsForEnvironment(newEnvironment)
+                .onChange(of: selectedEnvironment) { _, newEnvironment in
+                    loadSavedValues(for: newEnvironment)
                 }
             }
 
@@ -134,40 +133,18 @@ struct ConfigurationView: View {
             username = config.credentials.username
             password = config.credentials.password
         } else {
-            // Load QA defaults on first load
-            loadDefaultsForEnvironment(.qa)
+            loadSavedValues(for: selectedEnvironment)
         }
     }
 
-    private func loadDefaultsForEnvironment(_ environment: TapToPayEnvironment) {
-        switch environment {
-        case .qa:
-            // QA test credentials (auto-filled but editable)
-            deviceId = "DVvjrYhamHrwzkZKR2KgBmS5"
-            merchantId = "MUsq3Cs2YxjjTpKHJFHb4ukK"
-            merchantMid = "b02ef42b-e4e4-4131-800d-5e909c8a78c2"
-            merchantName = "Alpheratz LLC"
-            username = "US5jmtgVCr2x29u2GfwLVQKe"
-            password = "e0e84764-f0ae-4bfd-84bd-38f6b72dd7f2"
-
-        case .sandbox:
-            // Sandbox test credentials (auto-filled but editable)
-            deviceId = "DVvjrYhamHrwzkZKR2KgBmS5"
-            merchantId = "MUsq3Cs2YxjjTpKHJFHb4ukK"
-            merchantMid = "b02ef42b-e4e4-4131-800d-5e909c8a78c2"
-            merchantName = "Alpheratz LLC"
-            username = "US5jmtgVCr2x29u2GfwLVQKe"
-            password = "e0e84764-f0ae-4bfd-84bd-38f6b72dd7f2"
-
-        case .production:
-            // Clear for production (user needs to provide their own)
-            deviceId = ""
-            merchantId = ""
-            merchantMid = ""
-            merchantName = ""
-            username = ""
-            password = ""
-        }
+    private func loadSavedValues(for environment: TapToPayEnvironment) {
+        let saved = SavedConfigurationStore.load(for: environment)
+        deviceId = saved?.deviceId ?? ""
+        merchantId = saved?.merchant.merchantId ?? ""
+        merchantMid = saved?.merchant.merchantMid ?? ""
+        merchantName = saved?.merchant.merchantName ?? ""
+        username = saved?.credentials.username ?? ""
+        password = saved?.credentials.password ?? ""
     }
 
     private func validateConfiguration() -> Bool {

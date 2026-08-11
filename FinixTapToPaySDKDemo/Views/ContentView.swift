@@ -8,7 +8,6 @@
 import SwiftUI
 import FinixTapToPaySDK
 
-@available(iOS 16.4, *)
 struct ContentView: View {
 
     @StateObject private var viewModel: ContentViewModel
@@ -200,7 +199,7 @@ struct ContentView: View {
                         .background(Color(uiColor: .systemGroupedBackground))
                         .cornerRadius(8)
                         .id("bottom")
-                        .onChange(of: viewModel.logOutput) { _ in
+                        .onChange(of: viewModel.logOutput) {
                             DispatchQueue.main.async {
                                 proxy.scrollTo("bottom", anchor: .bottom)
                             }

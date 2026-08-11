@@ -13,7 +13,6 @@ import FinixTapToPaySDK
 // Avoid ambiguity between SwiftUI.Environment and FinixTapToPaySDK.TapToPayConfiguration.Environment
 typealias TapToPayEnvironment = TapToPayConfiguration.Environment
 
-@available(iOS 16.4, *)
 class ContentViewModel: ObservableObject {
 
     // MARK: - Published Properties
@@ -27,7 +26,7 @@ class ContentViewModel: ObservableObject {
     @Published var alertObject: AlertObject = AlertObject(title: "", message: "")
     @Published var showConfigurationSheet: Bool = false
 
-    @Published var selectedEnvironment: TapToPayEnvironment = .qa
+    @Published var selectedEnvironment: TapToPayEnvironment = .sandbox
 
     var isReaderReady: Bool {
         return statusText.lowercased().contains("ready")
@@ -49,37 +48,34 @@ class ContentViewModel: ObservableObject {
     // MARK: - Setup
 
     private func setupInitialConfiguration() {
-        // Auto-fill QA credentials
-        let credentials = TapToPayConfiguration.APICredentials(
-            username: "US5jmtgVCr2x29u2GfwLVQKe",
-            password: "e0e84764-f0ae-4bfd-84bd-38f6b72dd7f2"
-        )
+        // No credentials ship in source control. Restore the configuration saved on this
+        // device for the last-selected environment; with nothing saved the app starts
+        // unconfigured — enter values via the Configuration sheet.
+        guard let saved = SavedConfigurationStore.loadForLastSelectedEnvironment() else {
+            markUnconfigured()
+            return
+        }
 
-        let merchant = TapToPayConfiguration.MerchantInfo(
-            merchantId: "MUsq3Cs2YxjjTpKHJFHb4ukK",
-            merchantMid: "b02ef42b-e4e4-4131-800d-5e909c8a78c2",
-            merchantName: "Alpheratz LLC"
-        )
+        updateConfiguration(saved)
+    }
 
-        let deviceId = "DVvjrYhamHrwzkZKR2KgBmS5"
-
-        let configuration = TapToPayConfiguration(
-            credentials: credentials,
-            merchant: merchant,
-            environment: .qa,
-            deviceId: deviceId,
-            transactionOptions: TapToPayConfiguration.TransactionOptions(
-                returnReadResultImmediately: true,
-                autoPrepareOnForeground: true
-            )
-        )
-
-        updateConfiguration(configuration)
+    private func markUnconfigured() {
+        statusText = "Not Configured"
+        addLog("Enter your Finix credentials and device ID via Configuration to begin")
     }
 
     func updateConfiguration(_ configuration: TapToPayConfiguration) {
         currentConfiguration = configuration
         selectedEnvironment = configuration.environment
+
+        guard !configuration.credentials.username.isEmpty, !configuration.deviceId.isEmpty else {
+            markUnconfigured()
+            return
+        }
+
+        if !SavedConfigurationStore.save(configuration) {
+            addLog("⚠️ Could not save the configuration — it applies to this session only")
+        }
         finixTapToPay = FinixTapToPay(configuration: configuration)
 
         addLog("Configuration updated for environment: \(configuration.environment.stringValue)")
@@ -343,8 +339,8 @@ extension TapToPayEnvironment {
             return "Production"
         case .sandbox:
             return "Sandbox"
-        case .qa:
-            return "QA"
+        @unknown default:
+            return "Unknown"
         }
     }
 }

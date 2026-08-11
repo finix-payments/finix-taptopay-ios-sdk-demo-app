@@ -1,186 +1,85 @@
-# finix-taptopay-ios-sdk-demo-app
+# Finix Tap to Pay — iOS Demo App
 
-## Overview
-This repository hosts the demo application for [finix-taptopay-ios-sdk](https://github.com/finix-payments/finix-taptopay-ios-sdk)
+A runnable sample integration of [FinixTapToPaySDK](https://github.com/finix-payments/finix-taptopay-ios-sdk), Finix's Tap to Pay on iPhone SDK. It links a merchant's Apple ID, prepares the iPhone's built-in card reader, and takes sale, authorization, and refund payments with a live activity log.
 
-## Installation Guide
+## Requirements
 
-### 1. Clone the repository:
-```bash
-git clone https://github.com/finix-payments/finix-taptopay-ios-sdk-demo-app.git
-cd finix-taptopay-ios-sdk-demo-app
-```
+| | |
+|---|---|
+| Device | Physical iPhone XS or newer running iOS 18.1+ |
+| Xcode | 16.1 or later |
+| Apple | Developer account with the Tap to Pay entitlement `com.apple.developer.proximity-reader.payment.acceptance` |
+| Finix | API username & password, merchant ID, MID, merchant name, and an activated `IOS_TAP_TO_PAY` device ID |
 
-### 2. Open the demo project:
-```bash
-open FinixTapToPaySDKDemo.xcodeproj
-```
+Tap to Pay on iPhone does not run in the Simulator — the app builds and launches there, but `FinixTapToPay.isSupported()` returns `false` and an unsupported-device screen is shown. Use a physical iPhone.
 
-### 3. Run on a physical device or simulator:
+The SDK README has step-by-step walkthroughs for both prerequisites: [requesting the Apple entitlement](https://github.com/finix-payments/finix-taptopay-ios-sdk#apple-entitlement-and-infoplist) and [provisioning the Finix device](https://github.com/finix-payments/finix-taptopay-ios-sdk#device-provisioning).
 
-**Requirements:**
-- **For Simulator**: iOS 16.4+ simulator (any iPhone model)
-- **For Real Device**: iPhone XS or later running iOS 16.4+
-- **Apple Developer Account**: Required for Tap to Pay entitlement
+## Getting started
 
-#### Running on Simulator:
-1. Select any iOS Simulator (iOS 16.4+) as the run destination
-2. Press ⌘R to build and run
-3. The simulator fully supports Tap to Pay with simulated card reads
+1. Clone and open the project — Swift Package Manager resolves the SDK automatically:
 
-#### Running on Real Device:
-1. Connect your iPhone XS or later (iOS 16.4+)
-2. Ensure your Apple Developer account has the Tap to Pay entitlement:
-   - `com.apple.developer.proximity-reader.payment.acceptance`
-3. Select your device as the run destination
-4. Press ⌘R to build and run
+   ```bash
+   git clone https://github.com/finix-payments/finix-taptopay-ios-sdk-demo-app.git
+   cd finix-taptopay-ios-sdk-demo-app
+   open FinixTapToPaySDKDemo.xcodeproj
+   ```
 
-### 4. Using the App
+2. In **Signing & Capabilities**, select your own team and bundle identifier — the provisioning profile must carry the Tap to Pay entitlement (the committed project references Finix's team).
 
-#### Configure Credentials (Optional):
-The app comes pre-configured with sandbox test credentials. To use your own credentials:
+3. Select a connected iPhone as the run destination and press ⌘R.
 
-1. Tap the **menu icon (⋯)** in the top-right corner
-2. Tap **Configuration**
-3. Select your environment (Production, Sandbox, or QA)
-4. Enter your credentials:
-   - Device ID
-   - Merchant ID and MID
-   - API Username and Password
-5. Tap **Update Configuration**
+## Configuring credentials
 
-#### Initial Setup:
-1. **Link Account**: Tap **Link Account** in the menu to link your Finix merchant account with Apple Tap to Pay
-   - This step is required once per device
-   - The app will cache the link status
+The app ships with no credentials and starts as **Not Configured**:
 
-2. **Prepare Reader**: Tap **Prepare Reader** in the menu to initialize the device for transactions
-   - This step is required before processing transactions
-   - The reader stays active until the app is terminated
+1. Tap the **⋯ menu** (top right) → **Configuration**.
+2. Pick the environment — **Sandbox** (default) or **Production**.
+3. Enter your device ID, merchant ID / MID / name, and API username / password.
+4. Tap **Save**.
 
-#### Process a Transaction:
-1. Enter transaction amount in the text field (default: $5.00)
-2. Select transaction type: **Sale**, **Auth**, or **Refund**
-3. Tap the **"Tap to Pay on iPhone"** button
-4. Follow on-screen prompts to present a card to the device
-5. View transaction results in the logs section
-6. Transaction status will auto-reset after 2 seconds
+Saved values persist across launches, kept separately per environment in the iOS Keychain — switching the environment picker loads whatever was last saved for that environment. Nothing is written to source control.
 
-#### Additional Features:
-- **Clear Caches**: Tap menu → **Clear Caches** to reset account link status
-- **Clear Logs**: Tap **Clear Logs** button to clear the activity log
-- **Transaction Logs**: View detailed transaction information including card details, transaction ID, and transfer state
+## Taking a payment
 
-## Features
+1. **Link Account** (⋯ menu) — links the device's signed-in Apple ID to the merchant. Required once per device, and "account already linked" is treated as success. Tap to Pay registers the device to that Apple ID, so testing another merchant or environment on the same phone means switching Apple IDs.
+2. **Prepare** (status section) — warms up the reader. The status shows **"Tap to Pay on iPhone is READY"** when done.
+3. Enter an amount, choose **Sale**, **Auth**, or **Refund**, then tap **Tap to Pay on iPhone** and present a card.
+4. The result — card details, Finix transfer ID, and transfer state — appears in the logs section.
 
-- ✅ Account linking with Apple Tap to Pay
-- ✅ Reader preparation and management
-- ✅ Multiple transaction types (Sale, Authorization, Refund)
-- ✅ In-app configuration management
-- ✅ Environment switching (Production, Sandbox, QA)
-- ✅ Real-time transaction status updates
-- ✅ Detailed activity logs
-- ✅ Support for both iOS Simulator and real devices
-- ✅ Cache management
-- ✅ Error handling with descriptive messages
+Also available: **Clear Caches** (⋯ menu) resets the cached Apple ID link status, and the **Clear** button empties the log.
 
-## Project Structure
+## Project structure
 
-```
-finix-taptopay-ios-sdk-demo-app/
-├── FinixTapToPaySDKDemo/
-│   ├── FinixTapToPayDemoApp.swift      # App entry point
-│   ├── Models/
-│   │   └── ContentViewModel.swift      # Main ViewModel with transaction logic
-│   ├── Views/
-│   │   ├── ContentView.swift           # Main UI with transaction controls
-│   │   └── ConfigurationView.swift     # Configuration screen
-│   ├── Assets.xcassets/
-│   ├── Info.plist
-│   └── FinixTapToPaySDKDemo.entitlements  # Tap to Pay entitlement
-├── FinixTapToPaySDKDemoTests/
-├── FinixTapToPaySDKDemoUITests/
-└── README.md
-```
-
-## SDK Integration
-
-This demo app integrates the Finix Tap to Pay SDK via Swift Package Manager:
-
-```swift
-// In Xcode project settings
-dependencies: [
-    .package(
-        url: "https://github.com/finix-payments/finix-taptopay-ios-sdk",
-        branch: "main"
-    )
-]
-```
-
-The SDK provides:
-- Account linking with Apple Tap to Pay
-- Reader preparation and management
-- Transaction processing (Sale, Authorization, Refund)
-- Device management
-- Secure API communication with DataDog logging
-
-## Apple Tap to Pay Requirements
-
-### Supported Devices
-- iPhone XS or later
-- iOS 16.4 or later
-- Supported regions: United States, United Kingdom, Australia, Canada, and more
-
-### Developer Requirements
-1. Active Apple Developer Program membership
-2. Tap to Pay entitlement approved by Apple:
-   - `com.apple.developer.proximity-reader.payment.acceptance`
-3. iOS 16.4 or later deployment target
+| File | Role |
+|---|---|
+| `FinixTapToPaySDKDemoApp.swift` | App entry point; unsupported-device screen |
+| `Views/ContentView.swift` | Main flow — status, transaction type, amount, logs |
+| `Views/ConfigurationView.swift` | Environment and credential entry |
+| `Models/ContentViewModel.swift` | SDK wiring and transaction logic |
+| `Models/SavedConfigurationStore.swift` | Per-environment credential persistence (Keychain) |
 
 ## Troubleshooting
 
-### "Account Not Linked" Error
-- Tap menu → **Link Account** to link your merchant account
-- Ensure valid Finix credentials are configured (menu → Configuration)
-- Check that merchant ID and MID are correct
-- Verify network connectivity
-
-### "Prepare Failed" Error
-- Ensure account is linked first
-- Verify the merchant has Tap to Pay enabled in Finix dashboard
-- Check device compatibility (iPhone XS or later, iOS 16.4+)
-
-### "Transaction Failed" Error
-- Ensure reader is prepared (status shows "READY")
-- Select a transaction type (Sale, Auth, or Refund)
-- Check amount is valid (> 0)
-- On real device: ensure card is close enough to NFC reader
-
-### Build Errors
-- Ensure Xcode is up to date (Xcode 14.0+)
-- Clean build folder: Product → Clean Build Folder (⌘⇧K)
-- Delete derived data: ~/Library/Developer/Xcode/DerivedData
-- Restart Xcode
-
-### SPM Package Resolution Errors
-- File → Packages → Reset Package Caches
-- File → Packages → Update to Latest Package Versions
-- Check internet connectivity
-- Verify the SDK package path is correct
+| Symptom | Cause |
+|---|---|
+| "Tap to Pay Not Supported" screen | Running in the Simulator, on an iPhone older than XS, or on iOS below 18.1 |
+| "Not Configured" status | No saved credentials for the selected environment — open Configuration and Save |
+| Link fails, or Apple's terms sheet never appears | No Apple ID signed in on the device |
+| Prepare fails | Provisioning profile lacks the Tap to Pay entitlement |
+| Transaction fails mentioning activation | The device ID was created but never activated — see [Device provisioning](https://github.com/finix-payments/finix-taptopay-ios-sdk#device-provisioning) |
+| Token fetch fails | Credentials don't match the selected environment, or the MID isn't provisioned for Tap to Pay |
 
 ## Documentation
 
-- [Finix Tap to Pay SDK Documentation](https://github.com/finix-payments/finix-taptopay-ios-sdk)
-- [Finix API Documentation](https://docs.finix.com)
-- [Apple Tap to Pay Documentation](https://developer.apple.com/tap-to-pay/)
-- [Apple ProximityReader Framework](https://developer.apple.com/documentation/proximityreader)
-
-## License
-
-This demo app is provided as-is for demonstration purposes.
+- [FinixTapToPaySDK README](https://github.com/finix-payments/finix-taptopay-ios-sdk) — full quick start, API overview, and error reference
+- [Finix API documentation](https://docs.finix.com)
+- [Apple: Tap to Pay on iPhone](https://developer.apple.com/tap-to-pay/)
 
 ## Support
 
-For support, please contact:
-- Finix Support: support@finix.com
-- GitHub Issues: https://github.com/finix-payments/finix-taptopay-ios-sdk-demo-app/issues
+Contact your Finix point of contact.
+
+## License
+
+The demo source is provided as a reference for building your own integration. Use of the Finix Tap to Pay SDK is governed by your Finix services agreement — see the [SDK license](https://github.com/finix-payments/finix-taptopay-ios-sdk/blob/main/LICENSE).
