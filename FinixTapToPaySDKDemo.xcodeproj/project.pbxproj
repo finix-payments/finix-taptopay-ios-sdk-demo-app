@@ -7,7 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		D115BFC52D514A3700EA7707 /* FinixTapToPaySDK in Frameworks */ = {isa = PBXBuildFile; productRef = D115BFC42D514A3700EA7707 /* FinixTapToPaySDK */; };
+		D15136B0306F1E62006A499C /* FinixTapToPaySDK in Frameworks */ = {isa = PBXBuildFile; productRef = D15136AF306F1E62006A499C /* FinixTapToPaySDK */; };
+		D15136B3306F1E79006A499C /* DatadogCore in Frameworks */ = {isa = PBXBuildFile; productRef = D15136B2306F1E79006A499C /* DatadogCore */; };
+		D15136B5306F1E79006A499C /* DatadogCrashReporting in Frameworks */ = {isa = PBXBuildFile; productRef = D15136B4306F1E79006A499C /* DatadogCrashReporting */; };
+		D15136B7306F1E79006A499C /* DatadogLogs in Frameworks */ = {isa = PBXBuildFile; productRef = D15136B6306F1E79006A499C /* DatadogLogs */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -69,7 +72,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D115BFC52D514A3700EA7707 /* FinixTapToPaySDK in Frameworks */,
+				D15136B7306F1E79006A499C /* DatadogLogs in Frameworks */,
+				D15136B5306F1E79006A499C /* DatadogCrashReporting in Frameworks */,
+				D15136B3306F1E79006A499C /* DatadogCore in Frameworks */,
+				D15136B0306F1E62006A499C /* FinixTapToPaySDK in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -130,7 +136,10 @@
 			);
 			name = FinixTapToPaySDKDemo;
 			packageProductDependencies = (
-				D115BFC42D514A3700EA7707 /* FinixTapToPaySDK */,
+				D15136AF306F1E62006A499C /* FinixTapToPaySDK */,
+				D15136B2306F1E79006A499C /* DatadogCore */,
+				D15136B4306F1E79006A499C /* DatadogCrashReporting */,
+				D15136B6306F1E79006A499C /* DatadogLogs */,
 			);
 			productName = FinixTapToPaySDKDemo;
 			productReference = D1A7D0A72D41CD0300C00503 /* FinixTapToPaySDKDemo.app */;
@@ -215,7 +224,8 @@
 			mainGroup = D1A7D09E2D41CD0300C00503;
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
-				D115BFC32D514A3700EA7707 /* XCRemoteSwiftPackageReference "finix-taptopay-ios-sdk" */,
+				D15136AE306F1E62006A499C /* XCRemoteSwiftPackageReference "finix-taptopay-ios-sdk" */,
+				D15136B1306F1E79006A499C /* XCRemoteSwiftPackageReference "dd-sdk-ios" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = D1A7D0A82D41CD0300C00503 /* Products */;
@@ -592,21 +602,44 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		D115BFC32D514A3700EA7707 /* XCRemoteSwiftPackageReference "finix-taptopay-ios-sdk" */ = {
+		D15136AE306F1E62006A499C /* XCRemoteSwiftPackageReference "finix-taptopay-ios-sdk" */ = {
 			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/finix-payments/finix-taptopay-ios-sdk";
+			repositoryURL = "https://github.com/finix-payments/finix-taptopay-ios-sdk/";
 			requirement = {
-				kind = exactVersion;
-				version = 1.0.1;
+				kind = upToNextMinorVersion;
+				minimumVersion = 1.2.0;
+			};
+		};
+		D15136B1306F1E79006A499C /* XCRemoteSwiftPackageReference "dd-sdk-ios" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/Datadog/dd-sdk-ios.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 3.18.0;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		D115BFC42D514A3700EA7707 /* FinixTapToPaySDK */ = {
+		D15136AF306F1E62006A499C /* FinixTapToPaySDK */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = D115BFC32D514A3700EA7707 /* XCRemoteSwiftPackageReference "finix-taptopay-ios-sdk" */;
+			package = D15136AE306F1E62006A499C /* XCRemoteSwiftPackageReference "finix-taptopay-ios-sdk" */;
 			productName = FinixTapToPaySDK;
+		};
+		D15136B2306F1E79006A499C /* DatadogCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = D15136B1306F1E79006A499C /* XCRemoteSwiftPackageReference "dd-sdk-ios" */;
+			productName = DatadogCore;
+		};
+		D15136B4306F1E79006A499C /* DatadogCrashReporting */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = D15136B1306F1E79006A499C /* XCRemoteSwiftPackageReference "dd-sdk-ios" */;
+			productName = DatadogCrashReporting;
+		};
+		D15136B6306F1E79006A499C /* DatadogLogs */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = D15136B1306F1E79006A499C /* XCRemoteSwiftPackageReference "dd-sdk-ios" */;
+			productName = DatadogLogs;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
