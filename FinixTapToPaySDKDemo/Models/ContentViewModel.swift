@@ -273,7 +273,7 @@ class ContentViewModel: ObservableObject {
                     logTransactionResult(result)
                     onTransactionFinished()
                 }
-            } catch TapToPayError.transactionCancelled {
+            } catch let error as TapToPayError where error.code == .transactionCancelled {
                 await MainActor.run {
                     currentTransactionStatus = .failed
                     addLog("❌ Transaction cancelled")

@@ -1,5 +1,5 @@
 {
-  "originHash" : "26968c4965c30c6453e589390c937f2fc9b42fcca42a42ebb131d37920630086",
+  "originHash" : "78c62efe47a6342519fddb481e27f28d1f288ee296eec37b3f39e910e71ca92c",
   "pins" : [
     {
       "identity" : "dd-sdk-ios",
@@ -15,8 +15,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/finix-payments/finix-taptopay-ios-sdk/",
       "state" : {
-        "revision" : "a321f44bd2d2d60d73f631f55906119c03fbf12b",
-        "version" : "1.2.0"
+        "revision" : "afa1b755f02f496b5e579921e195acea372f8dc4",
+        "version" : "1.2.1"
       }
     },
     {
