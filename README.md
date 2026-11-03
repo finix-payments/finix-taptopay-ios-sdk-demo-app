@@ -9,7 +9,7 @@ A runnable sample integration of [FinixTapToPaySDK](https://github.com/finix-pay
 | Device | Physical iPhone XS or newer running iOS 18.1+ |
 | Xcode | 16.1 or later |
 | Apple | Developer account with the Tap to Pay entitlement `com.apple.developer.proximity-reader.payment.acceptance` |
-| Finix | API username & password, merchant ID, MID, merchant name, and an activated `IOS_TAP_TO_PAY` device ID |
+| Finix | API username & password, merchant ID, merchant name, and an activated `IOS_TAP_TO_PAY` device ID |
 
 Tap to Pay on iPhone does not run in the Simulator — the app builds and launches there, but `FinixTapToPay.isSupported()` returns `false` and an unsupported-device screen is shown. Use a physical iPhone.
 
@@ -35,7 +35,7 @@ The app ships with no credentials and starts as **Not Configured**:
 
 1. Tap the **⋯ menu** (top right) → **Configuration**.
 2. Pick the environment — **Sandbox** (default) or **Production**.
-3. Enter your device ID, merchant ID / MID / name, and API username / password.
+3. Enter your device ID, merchant ID and name, and API username / password.
 4. Tap **Save**.
 
 Saved values persist across launches, kept separately per environment in the iOS Keychain — switching the environment picker loads whatever was last saved for that environment. Nothing is written to source control.
@@ -68,7 +68,7 @@ Also available: **Clear Caches** (⋯ menu) resets the cached Apple ID link stat
 | Link fails, or Apple's terms sheet never appears | No Apple ID signed in on the device |
 | Prepare fails | Provisioning profile lacks the Tap to Pay entitlement |
 | Transaction fails mentioning activation | The device ID was created but never activated — see [Device provisioning](https://github.com/finix-payments/finix-taptopay-ios-sdk#device-provisioning) |
-| Token fetch fails | Credentials don't match the selected environment, or the MID isn't provisioned for Tap to Pay |
+| Token fetch fails | Credentials don't match the selected environment, or the merchant's MID isn't provisioned for Tap to Pay |
 
 ## Documentation
 

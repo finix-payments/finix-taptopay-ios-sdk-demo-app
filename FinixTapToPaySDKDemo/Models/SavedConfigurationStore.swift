@@ -18,7 +18,6 @@ enum SavedConfigurationStore {
             username: configuration.credentials.username,
             password: configuration.credentials.password,
             merchantId: configuration.merchant.merchantId,
-            merchantMid: configuration.merchant.merchantMid,
             merchantName: configuration.merchant.merchantName,
             deviceId: configuration.deviceId
         )
@@ -50,7 +49,6 @@ enum SavedConfigurationStore {
             ),
             merchant: TapToPayConfiguration.MerchantInfo(
                 merchantId: snapshot.merchantId,
-                merchantMid: snapshot.merchantMid,
                 merchantName: snapshot.merchantName
             ),
             environment: environment,
@@ -76,7 +74,6 @@ enum SavedConfigurationStore {
         let username: String
         let password: String
         let merchantId: String
-        let merchantMid: String
         let merchantName: String
         let deviceId: String
     }

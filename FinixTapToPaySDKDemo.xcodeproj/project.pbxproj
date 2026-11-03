@@ -597,7 +597,7 @@
 			repositoryURL = "https://github.com/finix-payments/finix-taptopay-ios-sdk/";
 			requirement = {
 				kind = upToNextMinorVersion;
-				minimumVersion = 1.2.1;
+				minimumVersion = 1.4.0;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
