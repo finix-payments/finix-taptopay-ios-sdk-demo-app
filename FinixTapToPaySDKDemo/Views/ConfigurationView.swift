@@ -15,7 +15,6 @@ struct ConfigurationView: View {
     @State private var selectedEnvironment: TapToPayEnvironment = .sandbox
     @State private var deviceId: String = ""
     @State private var merchantId: String = ""
-    @State private var merchantMid: String = ""
     @State private var merchantName: String = ""
     @State private var username: String = ""
     @State private var password: String = ""
@@ -53,13 +52,6 @@ struct ConfigurationView: View {
                         .font(.headline)
                         .frame(width: 100, alignment: .leading)
                     ClearableTextField(title: "Enter Merchant ID", text: $merchantId)
-                }
-
-                HStack {
-                    Text("MID")
-                        .font(.headline)
-                        .frame(width: 100, alignment: .leading)
-                    ClearableTextField(title: "Enter Merchant MID", text: $merchantMid)
                 }
 
                 HStack {
@@ -128,7 +120,6 @@ struct ConfigurationView: View {
             selectedEnvironment = config.environment
             deviceId = config.deviceId
             merchantId = config.merchant.merchantId
-            merchantMid = config.merchant.merchantMid
             merchantName = config.merchant.merchantName
             username = config.credentials.username
             password = config.credentials.password
@@ -141,7 +132,6 @@ struct ConfigurationView: View {
         let saved = SavedConfigurationStore.load(for: environment)
         deviceId = saved?.deviceId ?? ""
         merchantId = saved?.merchant.merchantId ?? ""
-        merchantMid = saved?.merchant.merchantMid ?? ""
         merchantName = saved?.merchant.merchantName ?? ""
         username = saved?.credentials.username ?? ""
         password = saved?.credentials.password ?? ""
@@ -155,9 +145,6 @@ struct ConfigurationView: View {
         }
         if merchantId.trimmingCharacters(in: .whitespaces).isEmpty {
             missingFields.append("• Merchant ID")
-        }
-        if merchantMid.trimmingCharacters(in: .whitespaces).isEmpty {
-            missingFields.append("• Merchant MID")
         }
         if merchantName.trimmingCharacters(in: .whitespaces).isEmpty {
             missingFields.append("• Merchant Name")
@@ -180,7 +167,6 @@ struct ConfigurationView: View {
 
         let merchant = TapToPayConfiguration.MerchantInfo(
             merchantId: merchantId.trimmingCharacters(in: .whitespaces),
-            merchantMid: merchantMid.trimmingCharacters(in: .whitespaces),
             merchantName: merchantName.trimmingCharacters(in: .whitespaces)
         )
 

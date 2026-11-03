@@ -15,8 +15,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/finix-payments/finix-taptopay-ios-sdk/",
       "state" : {
-        "revision" : "afa1b755f02f496b5e579921e195acea372f8dc4",
-        "version" : "1.2.1"
+        "revision" : "1a1d64a06c62b6fc7105c1aa2e4aa5f229b88a5b",
+        "version" : "1.4.0"
       }
     },
     {
