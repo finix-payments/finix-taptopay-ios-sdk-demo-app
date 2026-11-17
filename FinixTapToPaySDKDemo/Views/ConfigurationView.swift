@@ -77,6 +77,8 @@ struct ConfigurationView: View {
                     ClearableTextField(title: "Enter Password", text: $password)
                 }
             }
+
+            chargeOptionsSection
         }
         .navigationTitle("Configuration")
         .navigationBarTitleDisplayMode(.inline)
@@ -113,6 +115,50 @@ struct ConfigurationView: View {
             loadCurrentConfiguration()
         }
     }
+
+    /// Stand-ins for the tip / surcharge / signature settings the Checkout app reads from the Finix
+    /// device record. Unlike the credentials above these apply immediately; there is no Save step.
+    private var chargeOptionsSection: some View {
+        Section(
+            header: Text("CHARGE OPTIONS"),
+            footer: Text("Tip and surcharge are sent to the SDK as tipAmount and surchargeAmount. The signature stays on the device and is not uploaded. Applied immediately; refunds skip tip, surcharge and signature.")
+        ) {
+            Toggle("Prompt for tip", isOn: $viewModel.chargeOptions.tipEnabled)
+
+            HStack {
+                Text("Surcharge (bps)")
+                Spacer()
+                TextField("0", value: $viewModel.chargeOptions.surchargeBasisPoints, format: .number)
+                    .keyboardType(.numberPad)
+                    .multilineTextAlignment(.trailing)
+            }
+
+            Picker("Signature", selection: $viewModel.chargeOptions.signatureRule) {
+                ForEach(SignatureRule.allCases) { rule in
+                    Text(rule.displayName).tag(rule)
+                }
+            }
+
+            if viewModel.chargeOptions.signatureRule == .threshold {
+                HStack {
+                    Text("Threshold (cents)")
+                    Spacer()
+                    TextField("0", value: $viewModel.chargeOptions.signatureThresholdCents, format: .number)
+                        .keyboardType(.numberPad)
+                        .multilineTextAlignment(.trailing)
+                }
+            }
+
+            Picker("UI language", selection: $viewModel.chargeOptions.languageIdentifier) {
+                Text("System default").tag(String?.none)
+                ForEach(Self.languageOptions, id: \.self) { identifier in
+                    Text(identifier).tag(String?.some(identifier))
+                }
+            }
+        }
+    }
+
+    private static let languageOptions = ["en-US", "fr-CA", "es-US"]
 
     private func loadCurrentConfiguration() {
         // Load from viewModel's current configuration

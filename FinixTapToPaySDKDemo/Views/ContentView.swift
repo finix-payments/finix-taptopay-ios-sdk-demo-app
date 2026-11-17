@@ -64,6 +64,18 @@ struct ContentView: View {
                     ConfigurationView(viewModel: viewModel)
                 }
             }
+            .sheet(item: $viewModel.pendingCharge, onDismiss: {
+                viewModel.onPreChargeDismissed()
+            }) { charge in
+                PreChargeView(charge: charge, options: viewModel.chargeOptions) { tipCents in
+                    viewModel.onPreChargeConfirmed(charge, tipCents: tipCents)
+                }
+            }
+            .sheet(item: $viewModel.signatureRequest) { request in
+                SignatureCaptureView(request: request) { png in
+                    viewModel.onSignatureCaptured(png)
+                }
+            }
             .navigationTitle("Finix Tap to Pay")
             .navigationBarTitleDisplayMode(.inline)
         }
@@ -87,6 +99,14 @@ struct ContentView: View {
                     Text("Prepare")
                         .font(.body)
                         .foregroundColor(.blue)
+                }
+            }
+
+            if let progress = viewModel.prepareProgress, progress < 100 {
+                ProgressView(value: Double(progress), total: 100) {
+                    Text("Configuring reader \(progress)%")
+                        .font(.footnote)
+                        .foregroundColor(.secondary)
                 }
             }
 
@@ -118,6 +138,17 @@ struct ContentView: View {
             }
 
             transactionButtons
+
+            if let summary = viewModel.lastSummary {
+                NavigationLink {
+                    TransactionDetailView(summary: summary)
+                } label: {
+                    Text("transaction: \(summary.displayId)")
+                        .font(.subheadline)
+                        .lineLimit(1)
+                        .truncationMode(.middle)
+                }
+            }
         }
     }
 
@@ -128,6 +159,11 @@ struct ContentView: View {
             if viewModel.currentTransactionStatus == .processing {
                 ProgressView()
                     .scaleEffect(0.8)
+
+                if let progressText = viewModel.transactionProgressText {
+                    Text(progressText)
+                        .textCase(nil)
+                }
             }
         }
     }
