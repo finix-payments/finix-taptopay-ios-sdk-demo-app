@@ -594,7 +594,7 @@
 /* Begin XCRemoteSwiftPackageReference section */
 		D15136AE306F1E62006A499C /* XCRemoteSwiftPackageReference "finix-taptopay-ios-sdk" */ = {
 			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/finix-payments/finix-taptopay-ios-sdk/";
+			repositoryURL = "https://github.com/finix-payments/finix-taptopay-ios-sdk";
 			requirement = {
 				kind = upToNextMinorVersion;
 				minimumVersion = 1.4.0;

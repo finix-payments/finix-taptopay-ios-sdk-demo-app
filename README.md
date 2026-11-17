@@ -49,14 +49,32 @@ Saved values persist across launches, kept separately per environment in the iOS
 
 Also available: **Clear Caches** (⋯ menu) resets the cached Apple ID link status, and the **Clear** button empties the log.
 
+## Charge options
+
+The Configuration sheet has a **CHARGE OPTIONS** section. It applies at once and has no Save step. The settings stand in for the device record that the Checkout app reads.
+
+| Setting | Effect |
+|---|---|
+| Prompt for tip | Shows the 18, 20 and 22 percent tip presets, a custom tip and "No Tip" |
+| Surcharge (bps) | Sends `surchargeAmount` on the base amount. The range is 0 to 10,000 |
+| Signature | Always, Never or On threshold. The app shows the capture sheet only; it does not send `promptForSignature` |
+| UI language | Calls `setUserInterfaceLanguage` |
+
+The app sends the base amount as `amount`. The tap sheet shows the base amount plus the tip. Finix applies the surcharge to credit cards only. Refunds skip tip, surcharge and signature. The signature PNG stays in memory and is not uploaded, so the app does not send `promptForSignature` (that flag tells Finix an upload follows).
+
 ## Project structure
 
 | File | Role |
 |---|---|
 | `FinixTapToPaySDKDemoApp.swift` | App entry point; unsupported-device screen |
 | `Views/ContentView.swift` | Main flow — status, transaction type, amount, logs |
-| `Views/ConfigurationView.swift` | Environment and credential entry |
+| `Views/ConfigurationView.swift` | Environment, credential and charge option entry |
+| `Views/PreChargeView.swift` | Tip and surcharge notice sheet before the charge |
+| `Views/SignatureCaptureView.swift` | Signature sheet after the charge |
+| `Views/SignaturePadView.swift` | Finger-drawn signature pad and PNG renderer |
+| `Views/TransactionDetailView.swift` | Transaction detail page, pushed from the `transaction: <id>` row on the main screen |
 | `Models/ContentViewModel.swift` | SDK wiring and transaction logic |
+| `Models/ChargeOptions.swift` | Charge options, saved settings and cent math |
 | `Models/SavedConfigurationStore.swift` | Per-environment credential persistence (Keychain) |
 
 ## Troubleshooting
